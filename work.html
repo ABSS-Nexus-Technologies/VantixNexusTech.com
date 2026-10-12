@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Explore selected design systems, software concepts, and digital architecture prototypes created by Nexora Nexus.">
+  <meta name="author" content="Nexora Nexus">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Nexora Nexus">
+  <meta property="og:title" content="Selected Work & Concepts — Nexora Nexus">
+  <meta property="og:description" content="Explore selected design systems, software concepts, and digital architecture prototypes created by Nexora Nexus.">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Selected Work & Concepts — Nexora Nexus">
+  <meta name="twitter:description" content="Explore selected design systems, software concepts, and digital architecture prototypes created by Nexora Nexus.">
+
+  <!-- Canonical URL: Set to production domain upon deployment -->
+  <!-- <link rel="canonical" href="https://[YOUR_PRODUCTION_DOMAIN]/work.html"> -->
+
+  <!-- SVG Favicon Data URI -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f172a'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-weight='800' font-size='20' fill='%23ffffff' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+
+  <title>Selected Work & Concepts — Nexora Nexus</title>
+
+  <!-- Google Fonts: Manrope & DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "index.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Selected Work",
+          "item": "work.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+        <!-- Header / Navigation -->
+  <header class="site-header" id="top">
+    <div class="header-container">
+      <a class="brand" href="index.html" aria-label="Nexora Nexus home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">NEXORA <b>NEXUS</b></span>
+      </a>
+
+      <nav class="nav" id="main-nav" aria-label="Primary navigation">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">Home</a>
+          </li>
+
+          <!-- Services Dropdown (All 15 Official Services) -->
+          <li class="nav-item has-dropdown" data-dropdown="services">
+            <button class="nav-link nav-dropdown-btn" id="services-trigger" aria-expanded="false" aria-haspopup="true" aria-controls="services-menu">
+              Services
+              <svg class="dropdown-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="mega-menu" id="services-menu" role="region" aria-labelledby="services-trigger">
+              <div class="mega-menu-inner">
+                <div class="mega-menu-header">
+                  <span class="mega-menu-eyebrow">ALL 15 SERVICES &amp; DISCIPLINES</span>
+                  <a href="services.html" class="mega-menu-all-link">View all 15 services <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="services-mega-grid">
+                  <div class="mega-group-col">
+                    <span class="mega-group-title">Core Engineering &amp; Architecture</span>
+                    <ul class="mega-group-links">
+                      <li>
+                        <a href="website-development.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Website Development</b>
+                            <span class="mega-service-desc">High-performance web apps, corporate portals, and modern responsive sites engineered for speed, conversion, and global accessibility.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="software-development.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Software Development</b>
+                            <span class="mega-service-desc">Custom software systems, enterprise backend architecture, and robust business applications engineered for high reliability and scale.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="mobile-app-development.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Mobile App Development</b>
+                            <span class="mega-service-desc">Native iOS, Android, and cross-platform mobile solutions featuring fluid interactions, offline-first sync, and enterprise reliability.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="saas-development.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">SaaS Product Development</b>
+                            <span class="mega-service-desc">Multi-tenant cloud architecture, subscription billing, role-based workspaces, and scalable software foundations built for modern SaaS products.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="ecommerce-development.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">E-commerce Development</b>
+                            <span class="mega-service-desc">High-conversion online stores, headless commerce platforms, and checkout architectures engineered to scale under peak sales traffic.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="api-development-integration.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">API Development & Integration</b>
+                            <span class="mega-service-desc">High-throughput RESTful and GraphQL APIs, enterprise webhook engines, and seamless third-party software integrations built for speed and security.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="devops-automation.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">DevOps & Automation</b>
+                            <span class="mega-service-desc">Continuous integration, automated deployment pipelines, Docker/Kubernetes container orchestration, and proactive infrastructure observability.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="software-testing-qa.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Software Testing & Quality Assurance</b>
+                            <span class="mega-service-desc">End-to-end automated test suites, regression testing, performance load testing, and manual exploratory validation for defect-free software releases.</span>
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="mega-group-col">
+                    <span class="mega-group-title">Cloud, AI, Design &amp; Strategy</span>
+                    <ul class="mega-group-links">
+                      <li>
+                        <a href="ai-machine-learning.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Artificial Intelligence (AI) & Machine Learning</b>
+                            <span class="mega-service-desc">Applied machine learning models, retrieval-augmented generation (RAG), and intelligent automation pipelines built for enterprise workflows.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="cloud-computing.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Cloud Computing</b>
+                            <span class="mega-service-desc">Resilient cloud architecture across AWS, Google Cloud, and Azure with automated scaling, disaster recovery, and strict cost governance.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="cybersecurity.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Cybersecurity</b>
+                            <span class="mega-service-desc">Comprehensive security audits, vulnerability mitigation, zero-trust access control, and regulatory compliance for digital infrastructure.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="data-analytics-bi.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Data Analytics & Business Intelligence</b>
+                            <span class="mega-service-desc">Unified data warehousing, automated ETL/ELT pipelines, and live executive dashboards that turn raw records into actionable business intelligence.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="ui-ux-design.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">UI/UX Design</b>
+                            <span class="mega-service-desc">Human-centered user interfaces, comprehensive design systems, and interactive prototypes that bring clarity and elegance to complex workflows.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="digital-marketing-seo.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Digital Marketing & SEO</b>
+                            <span class="mega-service-desc">Technical search engine optimization, semantic structured data, and high-intent growth strategies designed for sustainable organic visibility.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="it-consulting-digital-transformation.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">IT Consulting & Digital Transformation</b>
+                            <span class="mega-service-desc">Strategic technology advisory, comprehensive technical debt audits, and phased modernization roadmaps that de-risk digital investments.</span>
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                    <div class="mega-consult-card">
+                      <div class="mega-consult-badge">ARCHITECT ADVISORY</div>
+                      <p class="mega-consult-title">Need custom technical architecture?</p>
+                      <p class="mega-consult-desc">Speak directly with our engineering leadership to plan your digital roadmap.</p>
+                      <a href="contact.html?service=it-consulting-digital-transformation" class="mega-consult-link">Book Technical Discovery <span aria-hidden="true">→</span></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <!-- Solutions Dropdown -->
+          <li class="nav-item has-dropdown" data-dropdown="solutions">
+            <button class="nav-link nav-dropdown-btn" id="solutions-trigger" aria-expanded="false" aria-haspopup="true" aria-controls="solutions-menu">
+              Solutions
+              <svg class="dropdown-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="mega-menu" id="solutions-menu" role="region" aria-labelledby="solutions-trigger">
+              <div class="mega-menu-inner">
+                <div class="mega-menu-header">
+                  <span class="mega-menu-eyebrow">TAILORED BUSINESS SOLUTIONS</span>
+                  <a href="solutions.html" class="mega-menu-all-link">View all solutions <span>→</span></a>
+                </div>
+                <div class="mega-menu-grid solutions-menu-grid">
+                  <a href="solutions.html#startups" class="mega-menu-item">
+                    <span class="mega-menu-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </span>
+                    <div class="mega-menu-text">
+                      <b>Startups</b>
+                      <p>Rapid MVP builds, technical velocity &amp; scalable code</p>
+                    </div>
+                  </a>
+
+                  <a href="solutions.html#smb" class="mega-menu-item">
+                    <span class="mega-menu-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    </span>
+                    <div class="mega-menu-text">
+                      <b>Small &amp; Medium Businesses</b>
+                      <p>Operational automation &amp; custom customer portals</p>
+                    </div>
+                  </a>
+
+                  <a href="solutions.html#enterprise" class="mega-menu-item">
+                    <span class="mega-menu-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-3"/></svg>
+                    </span>
+                    <div class="mega-menu-text">
+                      <b>Enterprise Solutions</b>
+                      <p>Mission-critical software, security &amp; cloud scale</p>
+                    </div>
+                  </a>
+
+                  <a href="solutions.html#digital-transformation" class="mega-menu-item">
+                    <span class="mega-menu-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    </span>
+                    <div class="mega-menu-text">
+                      <b>Digital Transformation</b>
+                      <p>Legacy modernization &amp; platform architecture</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a href="work.html" class="nav-link active">Work</a>
+          </li>
+          <li class="nav-item">
+            <a href="about.html" class="nav-link">About</a>
+          </li>
+          <li class="nav-item">
+            <a href="contact.html" class="nav-link">Contact</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="contact.html" class="button button-primary nav-cta">Let's Talk <span class="arrow" aria-hidden="true">↗</span></a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-drawer">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer" aria-label="Mobile navigation" hidden>
+      <div class="mobile-drawer-inner">
+        <ul class="mobile-nav-list">
+          <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+
+          <!-- Mobile Services Accordion -->
+          <li class="mobile-accordion-item">
+            <button class="mobile-accordion-btn" aria-expanded="false" aria-controls="mobile-services-panel">
+              <span>Services (15)</span>
+              <svg class="accordion-arrow" width="12" height="8" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="mobile-accordion-panel" id="mobile-services-panel" hidden>
+              <a href="services.html" class="mobile-sublink highlight">All 15 Services Overview →</a>
+              <div class="mobile-service-group-title">Software &amp; Web</div>
+              <a href="website-development.html" class="mobile-sublink">Website Development</a>
+              <a href="software-development.html" class="mobile-sublink">Software Development</a>
+              <a href="mobile-app-development.html" class="mobile-sublink">Mobile App Development</a>
+              <a href="ai-machine-learning.html" class="mobile-sublink">Artificial Intelligence (AI) & Machine Learning</a>
+              <a href="digital-marketing-seo.html" class="mobile-sublink">Digital Marketing & SEO</a>
+              <div class="mobile-service-group-title">Cloud, AI &amp; Security</div>
+              <a href="cloud-computing.html" class="mobile-sublink">Cloud Computing</a>
+              <a href="cybersecurity.html" class="mobile-sublink">Cybersecurity</a>
+              <a href="ecommerce-development.html" class="mobile-sublink">E-commerce Development</a>
+              <a href="ui-ux-design.html" class="mobile-sublink">UI/UX Design</a>
+              <a href="data-analytics-bi.html" class="mobile-sublink">Data Analytics & Business Intelligence</a>
+              <div class="mobile-service-group-title">Design, Strategy &amp; QA</div>
+              <a href="devops-automation.html" class="mobile-sublink">DevOps & Automation</a>
+              <a href="saas-development.html" class="mobile-sublink">SaaS Product Development</a>
+              <a href="api-development-integration.html" class="mobile-sublink">API Development & Integration</a>
+              <a href="it-consulting-digital-transformation.html" class="mobile-sublink">IT Consulting & Digital Transformation</a>
+              <a href="software-testing-qa.html" class="mobile-sublink">Software Testing & Quality Assurance</a>
+            </div>
+          </li>
+
+          <!-- Mobile Solutions Accordion -->
+          <li class="mobile-accordion-item">
+            <button class="mobile-accordion-btn" aria-expanded="false" aria-controls="mobile-solutions-panel">
+              <span>Solutions</span>
+              <svg class="accordion-arrow" width="12" height="8" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="mobile-accordion-panel" id="mobile-solutions-panel" hidden>
+              <a href="solutions.html" class="mobile-sublink highlight">All Solutions Overview →</a>
+              <a href="solutions.html#startups" class="mobile-sublink">Startups</a>
+              <a href="solutions.html#smb" class="mobile-sublink">Small &amp; Medium Businesses</a>
+              <a href="solutions.html#enterprise" class="mobile-sublink">Enterprise Solutions</a>
+              <a href="solutions.html#digital-transformation" class="mobile-sublink">Digital Transformation</a>
+            </div>
+          </li>
+
+          <li><a href="work.html" class="mobile-nav-link active">Work</a></li>
+          <li><a href="about.html" class="mobile-nav-link">About</a></li>
+          <li><a href="contact.html" class="mobile-nav-link">Contact</a></li>
+        </ul>
+
+        <div class="mobile-drawer-footer">
+          <a href="contact.html" class="button button-primary mobile-cta">Let's Talk <span class="arrow" aria-hidden="true">↗</span></a>
+          <div class="mobile-contact-direct">
+            <span>Direct Email:</span>
+            <a href="mailto:hello@nexoranexus.com">hello@nexoranexus.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Page Header -->
+    <section class="page-header" aria-labelledby="work-page-title">
+      <div class="section-wrap page-header-content reveal">
+        <div class="eyebrow">PORTFOLIO &amp; ARCHITECTURE</div>
+        <h1 id="work-page-title">
+          Selected work.<br>
+          Conceptual precision.
+        </h1>
+        <p>
+          A curated demonstration of how we engineer digital experiences across brand platforms, data visualization portals, and mobile systems.
+        </p>
+      </div>
+    </section>
+
+    <!-- Work Showcase Grid -->
+    <section class="section-padding" aria-label="Project Showcases">
+      <div class="section-wrap">
+        <div style="text-align: center; margin-bottom: 40px;" class="reveal">
+          <div class="concept-disclaimer">
+            <span aria-hidden="true">ℹ</span>
+            <span>Illustrative concepts showcasing design systems and product architecture. Not client case studies.</span>
+          </div>
+        </div>
+
+        <div class="work-grid" style="grid-template-columns: 1fr; gap: 40px;">
+          <!-- Concept 01: Northstar Studio -->
+          <article class="work-card reveal" style="display: grid; grid-template-columns: 1.1fr 0.9fr;">
+            <div class="work-visual visual-northstar" style="height: auto; min-height: 320px;">
+              <div class="browser-header">
+                <div class="browser-dots" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="browser-url">northstar.studio/experience</div>
+              </div>
+
+              <div class="northstar-content">
+                <small>DIGITAL BRAND PLATFORM</small>
+                <h4>Move your business forward with intent.</h4>
+              </div>
+
+              <div class="northstar-orb" aria-hidden="true"></div>
+            </div>
+
+            <div class="work-info" style="flex-direction: column; justify-content: center; padding: 36px 32px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px;">
+                <span class="work-badge">CONCEPT 01</span>
+                <span style="font-size: 12px; color: var(--text-muted);">Brand &amp; Web Platform</span>
+              </div>
+              <h3 style="font-size: 22px; margin-bottom: 12px;">Northstar Studio — Global Brand Platform</h3>
+              <p style="font-size: 14.5px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 20px;">
+                Designed to demonstrate high-converting marketing architecture with fluid typography, responsive layout dynamics, sub-second Core Web Vitals, and strict accessibility standards.
+              </p>
+              <div class="service-tags">
+                <span class="service-tag">Responsive Architecture</span>
+                <span class="service-tag">Performance SEO</span>
+                <span class="service-tag">WCAG 2.1 AA</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Concept 02: Flowline Ops -->
+          <article class="work-card reveal delay-1" style="display: grid; grid-template-columns: 1.1fr 0.9fr;">
+            <div class="work-visual visual-flowline" style="height: auto; min-height: 320px;">
+              <div class="flowline-mockup">
+                <div class="mockup-top-bar">
+                  <span>FLOWLINE // ENTERPRISE TELEMETRY</span>
+                  <span style="color: #10b981;">● REAL-TIME</span>
+                </div>
+
+                <div class="mockup-stats-row">
+                  <div class="mockup-stat-box">
+                    <span>Active Services</span>
+                    <b>99.98%</b>
+                  </div>
+                  <div class="mockup-stat-box">
+                    <span>Avg Latency</span>
+                    <b>24ms</b>
+                  </div>
+                  <div class="mockup-stat-box">
+                    <span>Processed</span>
+                    <b>1.4M / hr</b>
+                  </div>
+                </div>
+
+                <div class="mockup-chart-bars" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-info" style="flex-direction: column; justify-content: center; padding: 36px 32px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px;">
+                <span class="work-badge">CONCEPT 02</span>
+                <span style="font-size: 12px; color: var(--text-muted);">Custom Software &amp; SaaS</span>
+              </div>
+              <h3 style="font-size: 22px; margin-bottom: 12px;">Flowline Ops — Analytics &amp; Control Portal</h3>
+              <p style="font-size: 14.5px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 20px;">
+                A high-density operational telemetry dashboard built to showcase real-time telemetry streaming, interactive data visualization, and modular dashboard widgets with low-latency rendering.
+              </p>
+              <div class="service-tags">
+                <span class="service-tag">Data Visualization</span>
+                <span class="service-tag">Dashboard UX</span>
+                <span class="service-tag">Real-Time Telemetry</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Concept 03: Aura Mobile -->
+          <article class="work-card reveal delay-2" style="display: grid; grid-template-columns: 1.1fr 0.9fr;">
+            <div class="work-visual visual-aura" style="height: auto; min-height: 320px;">
+              <div class="aura-phone-mockup">
+                <div class="aura-top-pill" aria-hidden="true"></div>
+                <div class="aura-balance-card">
+                  <small>TOTAL LIQUIDITY</small>
+                  <b>₹ 1,842,500.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); padding: 4px 0;">
+                  <span>Recent Activity</span>
+                  <span style="color: var(--accent-primary);">View All ↗</span>
+                </div>
+                <div style="background: var(--bg-alt); padding: 8px 10px; border-radius: 6px; font-size: 11px; display: flex; justify-content: space-between;">
+                  <span>Cloud AWS Invoice</span>
+                  <b>- ₹ 42,100</b>
+                </div>
+              </div>
+            </div>
+
+            <div class="work-info" style="flex-direction: column; justify-content: center; padding: 36px 32px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px;">
+                <span class="work-badge">CONCEPT 03</span>
+                <span style="font-size: 12px; color: var(--text-muted);">Mobile Application</span>
+              </div>
+              <h3 style="font-size: 22px; margin-bottom: 12px;">Aura Mobile — Financial Companion App</h3>
+              <p style="font-size: 14.5px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 20px;">
+                A clean cross-platform mobile concept demonstrating intuitive banking micro-interactions, biometric security states, encrypted local caching, and offline transaction synchronization.
+              </p>
+              <div class="service-tags">
+                <span class="service-tag">Cross-Platform UI</span>
+                <span class="service-tag">Touch Ergonomics</span>
+                <span class="service-tag">Biometric Security</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architectural Standards -->
+    <section class="section-padding section-alt" aria-labelledby="standards-title">
+      <div class="section-wrap">
+        <div class="section-header reveal">
+          <div>
+            <div class="eyebrow">OUR BENCHMARKS</div>
+            <h2 id="standards-title">Standards behind every build.</h2>
+          </div>
+          <p class="section-header-desc">
+            We adhere to disciplined technical criteria across all engineering engagements.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card reveal">
+            <h3>Sub-Second Performance</h3>
+            <p>We optimize assets, scripts, and layout shifts to guarantee fast first-contentful paint times across mobile 4G and global networks.</p>
+          </div>
+          <div class="service-card reveal delay-1">
+            <h3>Accessibility by Design</h3>
+            <p>Every interface is structured with semantic HTML, high color contrast, visible focus states, and keyboard navigability.</p>
+          </div>
+          <div class="service-card reveal delay-2">
+            <h3>Modular Maintainability</h3>
+            <p>We write clean, well-documented code that your internal engineers can easily understand, extend, and maintain long after launch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pre-Footer CTA -->
+    <section class="cta-banner" aria-labelledby="work-cta-title">
+      <div class="section-wrap cta-banner-content reveal">
+        <div class="eyebrow">START YOUR BUILD</div>
+        <h2 id="work-cta-title">Ready to bring your product idea to life?</h2>
+        <p>Let's discuss your timeline, technical requirements, and business goals. We're ready to engineer your next milestone.</p>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a class="button button-primary" href="contact.html">
+            Start a Conversation <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+          <a class="button button-secondary" href="solutions.html">
+            Explore Solutions
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+        <!-- Footer -->
+  <footer class="footer">
+    <div class="section-wrap">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <a class="brand" href="index.html" aria-label="Nexora Nexus home">
+            <span class="brand-mark" aria-hidden="true">N</span>
+            <span class="brand-text">NEXORA <b>NEXUS</b></span>
+          </a>
+          <p>
+            Thoughtful technology, bespoke software engineering, and intelligent systems for modern businesses in India and worldwide.
+          </p>
+        </div>
+
+        <div class="footer-nav-groups">
+          <div class="footer-nav-col">
+            <h5>Navigation</h5>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="services.html">All 15 Services</a></li>
+              <li><a href="solutions.html">Solutions</a></li>
+              <li><a href="work.html">Selected Work</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-nav-col">
+            <h5>Key Capabilities</h5>
+            <ul>
+              <li><a href="website-development.html">Website Development</a></li>
+              <li><a href="software-development.html">Software Development</a></li>
+              <li><a href="mobile-app-development.html">Mobile App Development</a></li>
+              <li><a href="ai-machine-learning.html">AI &amp; Machine Learning</a></li>
+              <li><a href="cloud-computing.html">Cloud Computing</a></li>
+              <li><a href="cybersecurity.html">Cybersecurity</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-nav-col">
+            <h5>Legal &amp; Connect</h5>
+            <ul>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="terms.html">Terms of Service</a></li>
+              <li><a href="mailto:hello@nexoranexus.com">hello@nexoranexus.com</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © <span id="year">2026</span> Nexora Nexus. All rights reserved.
+        </div>
+
+        <div class="footer-bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="mailto:hello@nexoranexus.com">Direct Email ↗</a>
+        </div>
+
+        <a href="#top" class="back-top-btn" aria-label="Scroll back to top">
+          Back to top ↑
+        </a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

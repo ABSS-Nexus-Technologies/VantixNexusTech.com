@@ -1,0 +1,15 @@
+# ==============================================================================
+# Nexora Nexus — robots.txt
+# Production Search Engine Crawling Instructions
+# ==============================================================================
+
+User-agent: *
+Allow: /
+
+# Allow crawling of styles, scripts, and media resources for accurate mobile rendering & Core Web Vitals
+Allow: /style.css
+Allow: /script.js
+
+# Production XML Sitemap
+# NOTE: Replace [YOUR_PRODUCTION_DOMAIN] with your confirmed live domain upon deployment (e.g., https://nexoranexus.com/sitemap.xml)
+Sitemap: https://[YOUR_PRODUCTION_DOMAIN]/sitemap.xml
