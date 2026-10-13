@@ -1,0 +1,10 @@
+.git
+.gitignore
+.vscode
+.wrangler
+.assetsignore
+wrangler.toml
+*.md
+_headers
+vercel.json
+.nojekyll

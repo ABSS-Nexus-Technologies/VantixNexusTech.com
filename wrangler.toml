@@ -1,0 +1,13 @@
+# ==============================================================================
+# Cloudflare Workers Static Assets Configuration
+# Worker Name: vantixnexustech-com
+# Live Endpoint: https://vantixnexustech-com.abssnexus.workers.dev/
+# ==============================================================================
+name = "vantixnexustech-com"
+compatibility_date = "2024-09-23"
+
+# Cloudflare Static Assets configuration
+[assets]
+directory = "."
+not_found_handling = "404-page"
+html_handling = "auto-trailing-slash"
