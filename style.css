@@ -777,8 +777,10 @@ body.is-page-exiting main {
    -------------------------------------------------------------------------- */
 .menu-toggle {
   display: none;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: var(--radius-sm);
   background: var(--bg-alt);
   border: 1px solid var(--border-subtle);
