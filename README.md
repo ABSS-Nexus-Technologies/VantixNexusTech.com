@@ -64,11 +64,27 @@ Open the folder in VS Code, right-click `index.html`, and select **"Open with Li
 
 Because this is a pure static website with relative asset paths, it can be hosted on any static hosting platform for free.
 
-### Option 1: GitHub Pages (Recommended — 1-Click Setup)
+### Option 1: Cloudflare Pages (Recommended for High Speed & Global Anycast CDN)
 Your repository is already pushed to GitHub:
 `https://github.com/ABSS-Nexus-Technologies/VantixNexusTech.com`
 
-To make it live instantly:
+To deploy to Cloudflare Pages:
+1. Sign in to **[dash.cloudflare.com](https://dash.cloudflare.com/)**.
+2. Click **Workers & Pages** in the left sidebar &rarr; **Create** &rarr; select the **Pages** tab.
+3. Click **Connect to Git** &rarr; choose GitHub account `ABSS-Nexus-Technologies` &rarr; select `VantixNexusTech.com`.
+4. Configure build settings:
+   - **Framework preset**: `None`
+   - **Build command**: *(leave empty)*
+   - **Build output directory**: `/` (or leave empty)
+5. Click **Save and Deploy**.
+6. Cloudflare will deploy the site in ~15–30 seconds and provide your live `*.pages.dev` URL!
+
+*(See [CLOUDFLARE_PAGES_DEPLOYMENT_GUIDE.md](CLOUDFLARE_PAGES_DEPLOYMENT_GUIDE.md) for complete details).*
+
+---
+
+### Option 2: GitHub Pages (1-Click Setup from Repository)
+To make it live on GitHub Pages:
 1. Open your repository on GitHub: [github.com/ABSS-Nexus-Technologies/VantixNexusTech.com](https://github.com/ABSS-Nexus-Technologies/VantixNexusTech.com)
 2. Go to **Settings** &rarr; **Pages** (in the left sidebar).
 3. Under **Build and deployment**:
