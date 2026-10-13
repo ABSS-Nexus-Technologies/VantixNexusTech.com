@@ -137,6 +137,29 @@ svg {
   border-radius: var(--radius-sm);
 }
 
+/* Accessible Skip Link (WCAG 2.1 AA Bypass Blocks) */
+.skip-link {
+  position: absolute;
+  top: -120px;
+  left: 1.5rem;
+  z-index: 99999;
+  padding: 0.75rem 1.25rem;
+  background: var(--text-primary);
+  color: #ffffff;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 14px rgba(11, 18, 32, 0.18);
+  transition: top 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skip-link:focus {
+  top: 1rem;
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
 /* ==========================================================================
    Page Entrance Transitions (Lightweight, Subtle & Instant Interaction)
    ========================================================================== */

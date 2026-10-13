@@ -99,7 +99,7 @@ To make it live on GitHub Pages:
 
 ---
 
-### Option 2: Netlify (Free Tier, Automatic HTTPS & Global CDN)
+### Option 3: Netlify (Free Tier, Automatic HTTPS & Global CDN)
 1. Sign up or log in at [netlify.com](https://www.netlify.com).
 2. Click **"Add new site"** &rarr; **"Import an existing project"**.
 3. Choose **GitHub** and authorize access to `ABSS-Nexus-Technologies/VantixNexusTech.com`.
@@ -111,7 +111,7 @@ To make it live on GitHub Pages:
 
 ---
 
-### Option 3: Vercel (Free Tier, Edge Network)
+### Option 4: Vercel (Free Tier, Edge Network)
 1. Sign up or log in at [vercel.com](https://vercel.com).
 2. Click **"Add New..."** &rarr; **"Project"**.
 3. Select your GitHub repository `ABSS-Nexus-Technologies/VantixNexusTech.com`.

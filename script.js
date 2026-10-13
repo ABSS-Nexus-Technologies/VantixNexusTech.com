@@ -530,9 +530,10 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
     if (matchedService) {
-      // Find matching option in select element
+      // Find matching option in select element (supports slug, full name, or option text)
       for (let i = 0; i < serviceSelect.options.length; i++) {
-        if (serviceSelect.options[i].value === matchedService.name) {
+        const opt = serviceSelect.options[i];
+        if (opt.value === matchedService.name || opt.value === matchedService.slug || opt.text === matchedService.name) {
           serviceSelect.selectedIndex = i;
           break;
         }
