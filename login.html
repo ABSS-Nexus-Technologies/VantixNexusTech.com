@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Sign in to your Nexora Nexus applicant account to manage applications, track review stages, and access admissions updates.">
+  <meta name="author" content="Nexora Nexus">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Nexora Nexus">
+  <meta property="og:title" content="Applicant Sign In — Nexora Nexus">
+  <meta property="og:description" content="Sign in to your Nexora Nexus applicant account to track application progress and admissions decisions.">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Applicant Sign In — Nexora Nexus">
+  <meta name="twitter:description" content="Sign in to your Nexora Nexus applicant account.">
+
+  <!-- SVG Favicon Data URI -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f172a'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-weight='800' font-size='20' fill='%23ffffff' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+
+  <title>Applicant Sign In — Nexora Nexus</title>
+
+  <!-- Google Fonts: Manrope & DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "name": "Applicant Sign In — Nexora Nexus",
+      "description": "Sign in to your Nexora Nexus applicant account to track application progress."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "index.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Internships",
+          "item": "internships.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Sign In",
+          "item": "login.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header / Navigation -->
+  <header class="site-header" id="top">
+    <div class="header-container">
+      <a class="brand" href="index.html" aria-label="Nexora Nexus home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">NEXORA <b>NEXUS</b></span>
+      </a>
+
+      <nav class="nav" id="main-nav" aria-label="Primary navigation">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">Home</a>
+          </li>
+
+          <!-- Services Dropdown -->
+          <li class="nav-item has-dropdown" data-dropdown="services">
+            <button class="nav-link nav-dropdown-btn" id="services-trigger" aria-expanded="false" aria-haspopup="true" aria-controls="services-menu">
+              Services
+              <svg class="dropdown-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="mega-menu" id="services-menu" role="region" aria-labelledby="services-trigger">
+              <div class="mega-menu-inner">
+                <div class="mega-menu-header">
+                  <span class="mega-menu-eyebrow">ALL 15 SERVICES &amp; DISCIPLINES</span>
+                  <a href="services.html" class="mega-menu-all-link">View all 15 services <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="services-mega-grid">
+                  <div class="mega-group-col">
+                    <span class="mega-group-title">Core Engineering &amp; Architecture</span>
+                    <ul class="mega-group-links">
+                      <li>
+                        <a href="website-development.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Website Development</b>
+                            <span class="mega-service-desc">Modern bespoke web platforms.</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="software-development.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Software Development</b>
+                            <span class="mega-service-desc">Scalable distributed software.</span>
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="mega-group-col">
+                    <span class="mega-group-title">Cloud, AI &amp; Strategy</span>
+                    <ul class="mega-group-links">
+                      <li>
+                        <a href="cloud-computing.html" class="mega-service-item">
+                          <span class="mega-service-icon" aria-hidden="true">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                          </span>
+                          <span class="mega-service-info">
+                            <b class="mega-service-name">Cloud Computing</b>
+                            <span class="mega-service-desc">Serverless infrastructure &amp; resilience.</span>
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <!-- Solutions Dropdown -->
+          <li class="nav-item has-dropdown" data-dropdown="solutions">
+            <button class="nav-link nav-dropdown-btn" id="solutions-trigger" aria-expanded="false" aria-haspopup="true" aria-controls="solutions-menu">
+              Solutions
+              <svg class="dropdown-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="mega-menu" id="solutions-menu" role="region" aria-labelledby="solutions-trigger">
+              <div class="mega-menu-inner">
+                <div class="mega-menu-header">
+                  <span class="mega-menu-eyebrow">TAILORED BUSINESS SOLUTIONS</span>
+                  <a href="solutions.html" class="mega-menu-all-link">View all solutions <span>→</span></a>
+                </div>
+                <div class="mega-menu-grid solutions-menu-grid">
+                  <a href="solutions.html#startups" class="mega-menu-item">
+                    <span class="mega-menu-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </span>
+                    <div class="mega-menu-text">
+                      <b>Startup Launchpads</b>
+                      <p>Rapid MVP delivery &amp; architecture</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a href="work.html" class="nav-link">Work</a>
+          </li>
+          <li class="nav-item">
+            <a href="about.html" class="nav-link">About</a>
+          </li>
+          <li class="nav-item">
+            <a href="internships.html" class="nav-link">Internships</a>
+          </li>
+          <li class="nav-item">
+            <a href="contact.html" class="nav-link">Contact</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="contact.html" class="button button-primary nav-cta">Let's Talk <span class="arrow" aria-hidden="true">↗</span></a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-drawer">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer" aria-label="Mobile navigation" hidden>
+      <div class="mobile-drawer-inner">
+        <ul class="mobile-nav-list">
+          <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+          <li><a href="services.html" class="mobile-nav-link">Services</a></li>
+          <li><a href="solutions.html" class="mobile-nav-link">Solutions</a></li>
+          <li><a href="work.html" class="mobile-nav-link">Work</a></li>
+          <li><a href="about.html" class="mobile-nav-link">About</a></li>
+          <li><a href="internships.html" class="mobile-nav-link">Internships</a></li>
+          <li><a href="contact.html" class="mobile-nav-link">Contact</a></li>
+        </ul>
+        <div class="mobile-drawer-footer">
+          <a href="contact.html" class="button button-primary mobile-cta">Let's Talk <span class="arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="section-padding auth-page-section" aria-labelledby="auth-card-title">
+      <div class="section-wrap auth-container">
+        <div class="auth-card">
+          <div class="auth-card-header">
+            <span class="auth-eyebrow">ADMISSIONS PORTAL</span>
+            <h1 id="auth-card-title" class="auth-title">Applicant Sign In</h1>
+            <p class="auth-subtitle">
+              Sign in with your registered email to submit applications, track review status, and review admissions decisions.
+            </p>
+          </div>
+
+          <!-- Live feedback status container -->
+          <div id="login-status" class="auth-status-container" role="status" aria-live="polite"></div>
+
+          <form id="applicant-login-form" class="auth-form" novalidate aria-label="Applicant Login Form">
+            <!-- Email -->
+            <div class="form-group">
+              <label for="login-email">Email Address <span class="required" aria-hidden="true">*</span></label>
+              <input type="email" id="login-email" name="email" autocomplete="username" placeholder="name@university.edu" required aria-required="true" aria-describedby="login-email-error">
+              <span class="field-error-msg" id="login-email-error" aria-live="polite"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="login-password">Password <span class="required" aria-hidden="true">*</span></label>
+              <input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="Enter your account password" required aria-required="true" aria-describedby="login-password-error">
+              <span class="field-error-msg" id="login-password-error" aria-live="polite"></span>
+            </div>
+
+            <button type="submit" id="login-submit-btn" class="button button-primary button-block">
+              Sign In to Admissions Portal <span class="arrow" aria-hidden="true">→</span>
+            </button>
+          </form>
+
+          <div class="auth-card-footer">
+            <p>Don't have an applicant account? <a href="register.html">Create an Account</a></p>
+            <p style="margin-top: 8px;">Explore opportunities: <a href="internships.html">Browse Internship Programmes</a></p>
+          </div>
+
+          <div class="auth-notice-card" role="note">
+            <strong>Admissions Verification Disclosure:</strong><br>
+            Applicant accounts must be verified before applications can be accepted. Since automated transactional email delivery services are awaiting production provider setup, automated verification links are currently offline. Visit our <a href="verify-email.html">Email Verification</a> page to activate your account or request a verification link. For account activation inquiries, contact admissions directly at <a href="mailto:hello@nexoranexus.com">hello@nexoranexus.com</a>.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="section-wrap">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <a class="brand" href="index.html" aria-label="Nexora Nexus home">
+            <span class="brand-mark" aria-hidden="true">N</span>
+            <span class="brand-text">NEXORA <b>NEXUS</b></span>
+          </a>
+          <p>
+            Thoughtful technology, bespoke software engineering, and intelligent systems for modern businesses in India and worldwide.
+          </p>
+        </div>
+
+        <div class="footer-nav-groups">
+          <div class="footer-nav-col">
+            <h5>Navigation</h5>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="services.html">All 15 Services</a></li>
+              <li><a href="solutions.html">Solutions</a></li>
+              <li><a href="work.html">Selected Work</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="internships.html">Internships</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-nav-col">
+            <h5>Admissions &amp; Legal</h5>
+            <ul>
+              <li><a href="login.html">Applicant Sign In</a></li>
+              <li><a href="register.html">Create Account</a></li>
+              <li><a href="verify-email.html">Verify Email</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="terms.html">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © <span id="year">2026</span> Nexora Nexus. All rights reserved.
+        </div>
+        <div class="footer-bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="mailto:hello@nexoranexus.com">hello@nexoranexus.com</a>
+        </div>
+        <a href="#top" class="back-top-btn" aria-label="Scroll back to top">
+          Back to top ↑
+        </a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

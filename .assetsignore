@@ -8,3 +8,6 @@ wrangler.toml
 _headers
 vercel.json
 .nojekyll
+worker/
+migrations/
+tests/

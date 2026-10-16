@@ -144,6 +144,14 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- Careers & Internships -->
+  <url>
+    <loc>https://[YOUR_PRODUCTION_DOMAIN]/internships.html</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
   <!-- Legal & Transparency Pages -->
   <url>
     <loc>https://[YOUR_PRODUCTION_DOMAIN]/privacy.html</loc>

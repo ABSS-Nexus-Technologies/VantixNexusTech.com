@@ -596,28 +596,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  // Shared form field validation helpers
+  const setFieldError = (field, errorMsg) => {
+    if (!field) return;
+    field.classList.add('input-error');
+    field.setAttribute('aria-invalid', 'true');
+    const errSpan = document.getElementById(`${field.id}-error`);
+    if (errSpan) {
+      errSpan.textContent = errorMsg;
+    }
+  };
+
+  const clearFieldError = (field) => {
+    if (!field) return;
+    field.classList.remove('input-error');
+    field.setAttribute('aria-invalid', 'false');
+    const errSpan = document.getElementById(`${field.id}-error`);
+    if (errSpan) {
+      errSpan.textContent = '';
+    }
+  };
+
   if (contactForm && formStatus) {
     const inputs = contactForm.querySelectorAll('input:not([name="website_url"]), select, textarea');
-
-    // Helper to set field error
-    const setFieldError = (field, errorMsg) => {
-      field.classList.add('input-error');
-      field.setAttribute('aria-invalid', 'true');
-      const errSpan = document.getElementById(`${field.id}-error`);
-      if (errSpan) {
-        errSpan.textContent = errorMsg;
-      }
-    };
-
-    // Helper to clear field error
-    const clearFieldError = (field) => {
-      field.classList.remove('input-error');
-      field.setAttribute('aria-invalid', 'false');
-      const errSpan = document.getElementById(`${field.id}-error`);
-      if (errSpan) {
-        errSpan.textContent = '';
-      }
-    };
 
     // Real-time validation feedback on blur and input
     inputs.forEach((input) => {
@@ -829,6 +830,988 @@ Inquiry submitted via Nexora Nexus Web Portal (${new Date().toLocaleDateString()
         `;
 
         wireCopyInquiryButton(inquiryBody);
+      }
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     7.4 Phase 17 & Phase 28: Safe Internship Integration & Admissions Pipeline
+     -------------------------------------------------------------------------- */
+  const INTERNSHIP_ROLES = [
+    { slug: 'web-development', name: 'Web Development Intern' },
+    { slug: 'frontend-development', name: 'Frontend Development Intern' },
+    { slug: 'ui-ux-design', name: 'UI/UX Design Intern' },
+    { slug: 'python-ai-ml', name: 'Python / AI & Machine Learning Intern' },
+    { slug: 'digital-marketing-seo', name: 'Digital Marketing & SEO Intern' },
+    { slug: 'software-testing-qa', name: 'Software Testing / QA Intern' }
+  ];
+
+  /**
+   * INTERNSHIP APPLICATION FORM CONFIGURATION
+   *
+   * Set `endpoint` to your verified application endpoint (e.g. Formspree, Basin,
+   * or a dedicated Cloudflare Worker POST route).
+   *
+   * If `endpoint` is empty (''), the form does NOT simulate transmission and
+   * never shows a fake success alert. It provides an honest notification that
+   * online submissions are awaiting backend provisioning and offers a 1-click
+   * clipboard copy of the formatted application summary for safekeeping.
+   */
+  const INTERNSHIP_FORM_CONFIG = {
+    endpoint: '', // Configuration placeholder: Awaiting verified internship intake endpoint
+    targetEmail: '' // Configuration placeholder: Awaiting verified application inbox
+  };
+
+  // Real Same-Origin API Endpoints (Phase 28)
+  const INTERNSHIP_API = {
+    programs: '/api/programs',
+    applications: '/api/applications',
+    myApplications: '/api/applications/me',
+    userMe: '/api/user/me'
+  };
+
+  // In-Memory Session & Program State (Never stored in localStorage or exposed)
+  let applicantSession = {
+    checked: false,
+    isAuthenticated: false,
+    isVerified: false,
+    user: null
+  };
+  let liveProgramsList = [];
+  let catalogueState = {
+    status: 'idle', // 'idle' | 'loading' | 'loaded' | 'empty' | 'error'
+    programs: []
+  };
+  let isSubmittingApplication = false;
+
+  const internshipRoleSelect = document.getElementById('internship-role');
+  const internshipRoleBadgeContainer = document.getElementById('internship-role-badge');
+  const internshipForm = document.getElementById('internship-form');
+  const internshipStatus = document.getElementById('internship-form-status');
+  const internshipSubmitBtn = document.getElementById('internship-submit-btn');
+
+  const setPreselectedRole = (roleSlug) => {
+    if (!internshipRoleSelect) return;
+    const cleanSlug = String(roleSlug).toLowerCase().trim();
+    const matched = INTERNSHIP_ROLES.find(r => r.slug === cleanSlug || r.name.toLowerCase() === cleanSlug);
+    if (matched) {
+      for (let i = 0; i < internshipRoleSelect.options.length; i++) {
+        const opt = internshipRoleSelect.options[i];
+        if (opt.value === matched.name || opt.value === matched.slug || opt.text === matched.name) {
+          internshipRoleSelect.selectedIndex = i;
+          break;
+        }
+      }
+      if (internshipRoleBadgeContainer) {
+        internshipRoleBadgeContainer.innerHTML = `
+          <div class="intern-preselected-badge" role="status">
+            <span class="badge-icon" aria-hidden="true">✓</span>
+            <span>Preselected Role: <strong>${escapeHtml(matched.name)}</strong></span>
+            <span class="badge-note">(Context passed from role card · You can change this anytime)</span>
+          </div>
+        `;
+      }
+    }
+  };
+
+  const selectLiveProgram = (programId, programTitle) => {
+    if (!internshipRoleSelect) return;
+    for (let i = 0; i < internshipRoleSelect.options.length; i++) {
+      if (internshipRoleSelect.options[i].value === programId) {
+        internshipRoleSelect.selectedIndex = i;
+        break;
+      }
+    }
+    if (internshipRoleBadgeContainer) {
+      internshipRoleBadgeContainer.innerHTML = `
+        <div class="intern-preselected-badge" role="status">
+          <span class="badge-icon" aria-hidden="true">✓</span>
+          <span>Selected Track: <strong>${escapeHtml(programTitle)}</strong></span>
+          <span class="badge-note">(Active Program · ID: ${escapeHtml(programId)})</span>
+        </div>
+      `;
+    }
+  };
+
+  // Wire URL query parameters for ?role=[slug]
+  if (internshipRoleSelect) {
+    const roleParam = urlParams.get('role');
+    if (roleParam) {
+      setPreselectedRole(roleParam);
+    }
+
+    const roleSelectBtns = document.querySelectorAll('.role-select-btn');
+    roleSelectBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const roleSlug = btn.getAttribute('data-role');
+        if (roleSlug) {
+          setPreselectedRole(roleSlug);
+        }
+      });
+    });
+  }
+
+  // 1. Session & Auth Verification Checker
+  const checkApplicantSession = async () => {
+    const authStatusEl = document.getElementById('applicant-auth-status');
+    if (!authStatusEl) return;
+
+    try {
+      const res = await fetch(INTERNSHIP_API.userMe, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+        credentials: 'same-origin'
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const user = data.user;
+        const isVerified = user.status === 'active';
+        applicantSession = {
+          checked: true,
+          isAuthenticated: true,
+          isVerified,
+          user
+        };
+
+        if (user.status === 'pending_verification') {
+          authStatusEl.innerHTML = `
+            <div class="auth-status-card unverified" role="status">
+              <div class="auth-status-icon" aria-hidden="true">⏳</div>
+              <div class="auth-status-body">
+                <span class="auth-status-badge">Verification Pending</span>
+                <p class="auth-status-message">
+                  Signed in as <strong>${escapeHtml(user.email)}</strong>. Your email verification is pending. Only verified accounts are eligible to submit applications.
+                  <em>(Note: Transactional verification email delivery is awaiting provider configuration).</em>
+                </p>
+              </div>
+            </div>
+          `;
+        } else if (user.status === 'active') {
+          authStatusEl.innerHTML = `
+            <div class="auth-status-card verified" role="status">
+              <div class="auth-status-icon" aria-hidden="true">✓</div>
+              <div class="auth-status-body">
+                <span class="auth-status-badge">Verified Applicant</span>
+                <p class="auth-status-message">
+                  Signed in as <strong>${escapeHtml(user.full_name || user.email)}</strong> (${escapeHtml(user.email)}). Your account is verified and eligible to submit applications.
+                </p>
+              </div>
+            </div>
+          `;
+        } else {
+          authStatusEl.innerHTML = `
+            <div class="auth-status-card signed-out" role="status">
+              <div class="auth-status-icon" aria-hidden="true">ℹ</div>
+              <div class="auth-status-body">
+                <span class="auth-status-badge">Account Notice</span>
+                <p class="auth-status-message">
+                  Signed in as <strong>${escapeHtml(user.email)}</strong> (${escapeHtml(user.status)}).
+                </p>
+              </div>
+            </div>
+          `;
+        }
+      } else {
+        applicantSession = {
+          checked: true,
+          isAuthenticated: false,
+          isVerified: false,
+          user: null
+        };
+        authStatusEl.innerHTML = `
+          <div class="auth-status-card signed-out" role="status">
+            <div class="auth-status-icon" aria-hidden="true">🔒</div>
+            <div class="auth-status-body">
+              <span class="auth-status-badge">Applicant Session: Guest</span>
+              <p class="auth-status-message">
+                You are currently browsing as a guest. Submitting an application to the admissions API requires an active applicant session.
+                For access and admissions inquiries, please contact <a href="mailto:hello@nexoranexus.com" style="color: var(--accent-primary); text-decoration: underline;">hello@nexoranexus.com</a>.
+              </p>
+              <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="login.html" class="button button-sm button-primary">Sign In to Apply →</a>
+                <a href="register.html" class="button button-sm button-secondary">Create Intern Account</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    } catch {
+      applicantSession = {
+        checked: true,
+        isAuthenticated: false,
+        isVerified: false,
+        user: null
+      };
+      authStatusEl.innerHTML = `
+        <div class="auth-status-card signed-out" role="status">
+          <div class="auth-status-icon" aria-hidden="true">🔒</div>
+          <div class="auth-status-body">
+            <span class="auth-status-badge">Admissions Portal</span>
+            <p class="auth-status-message">
+              Admissions session status could not be verified automatically. An active intern applicant account is required for online application submission.
+            </p>
+            <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <a href="login.html" class="button button-sm button-primary">Sign In →</a>
+              <a href="register.html" class="button button-sm button-secondary">Create Account</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    loadMyApplications();
+  };
+
+  // 2. Active Program Catalogue Loader
+  const loadProgramCatalogue = async () => {
+    const catStatus = document.getElementById('programs-catalogue-status');
+    const liveContainer = document.getElementById('live-programs-container');
+    if (!catStatus) return;
+
+    catalogueState.status = 'loading';
+    catalogueState.programs = [];
+
+    catStatus.innerHTML = `
+      <div class="catalogue-state-card loading" role="status">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="loading-spinner" aria-hidden="true"></span>
+          <span>Loading accredited internship programs from the admissions API...</span>
+        </div>
+      </div>
+    `;
+
+    try {
+      const res = await fetch(INTERNSHIP_API.programs, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+        credentials: 'same-origin'
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server returned HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      liveProgramsList = Array.isArray(data.programs) ? data.programs : [];
+      catalogueState.programs = liveProgramsList;
+
+      if (liveProgramsList.length === 0) {
+        catalogueState.status = 'empty';
+        catStatus.innerHTML = `
+          <div class="catalogue-state-card notice" role="status">
+            <div>
+              <strong>Admissions Schedule Notice:</strong> Active enrollment tracks are currently awaiting schedule finalization.
+              No programs are currently accepting applications in the database. The categories below represent proposed disciplines for talent interest registration.
+            </div>
+          </div>
+        `;
+        if (liveContainer) liveContainer.hidden = true;
+      } else {
+        catalogueState.status = 'loaded';
+        catStatus.innerHTML = `
+          <div class="catalogue-state-card live" role="status">
+            <div>
+              <strong>✓ Active Programs Open:</strong> ${liveProgramsList.length} accredited internship program${liveProgramsList.length > 1 ? 's' : ''} currently open for enrollment.
+            </div>
+          </div>
+        `;
+
+        if (liveContainer) {
+          liveContainer.hidden = false;
+          liveContainer.innerHTML = '';
+
+          const heading = document.createElement('h3');
+          heading.className = 'live-programs-heading';
+          heading.textContent = 'Active Programs Open for Admission';
+          liveContainer.appendChild(heading);
+
+          const grid = document.createElement('div');
+          grid.className = 'live-programs-grid';
+
+          liveProgramsList.forEach(program => {
+            const card = document.createElement('article');
+            card.className = 'live-program-card';
+
+            const badge = document.createElement('span');
+            badge.className = 'live-program-badge';
+            badge.textContent = 'Active Track · Open for Enrollment';
+            card.appendChild(badge);
+
+            const title = document.createElement('h4');
+            title.className = 'live-program-title';
+            title.textContent = program.title || 'Untitled Program';
+            card.appendChild(title);
+
+            const desc = document.createElement('p');
+            desc.className = 'live-program-desc';
+            desc.textContent = program.description || 'Program curriculum details available upon enrollment.';
+            card.appendChild(desc);
+
+            const meta = document.createElement('div');
+            meta.className = 'live-program-meta';
+            const durSpan = document.createElement('span');
+            durSpan.innerHTML = `Duration: <strong>${program.duration_weeks ? program.duration_weeks + ' Weeks' : 'Flexible'}</strong>`;
+            const modeSpan = document.createElement('span');
+            modeSpan.innerHTML = `Mode: <strong>${escapeHtml(program.mode || 'Remote')}</strong>`;
+            meta.appendChild(durSpan);
+            meta.appendChild(modeSpan);
+            card.appendChild(meta);
+
+            const price = document.createElement('div');
+            price.className = 'live-program-price';
+            if (typeof program.price_paise === 'number' && program.price_paise === 0) {
+              price.textContent = 'Tuition: Sponsored / Free (₹0)';
+            } else if (typeof program.price_paise === 'number' && program.price_paise > 0) {
+              const amt = (program.price_paise / 100).toLocaleString('en-IN');
+              price.textContent = `Tuition: ₹${amt} ${program.currency || 'INR'} (Explicit Program Fee)`;
+            } else {
+              price.textContent = 'Tuition: Details confirmed upon admission';
+            }
+            card.appendChild(price);
+
+            const applyBtn = document.createElement('a');
+            applyBtn.href = '#internship-application';
+            applyBtn.className = 'button button-primary button-sm';
+            applyBtn.style.textAlign = 'center';
+            applyBtn.textContent = 'Select & Apply ↓';
+            applyBtn.addEventListener('click', () => {
+              selectLiveProgram(program.id, program.title);
+            });
+            card.appendChild(applyBtn);
+
+            grid.appendChild(card);
+          });
+
+          liveContainer.appendChild(grid);
+        }
+
+        // Add live program options into #internship-role select
+        if (internshipRoleSelect) {
+          let optgroup = internshipRoleSelect.querySelector('optgroup[data-live-programs="true"]');
+          if (!optgroup) {
+            optgroup = document.createElement('optgroup');
+            optgroup.label = 'Active Programs Open for Admission';
+            optgroup.setAttribute('data-live-programs', 'true');
+            const firstOpt = internshipRoleSelect.querySelector('option[value=""]');
+            if (firstOpt && firstOpt.nextSibling) {
+              internshipRoleSelect.insertBefore(optgroup, firstOpt.nextSibling);
+            } else {
+              internshipRoleSelect.appendChild(optgroup);
+            }
+          }
+          optgroup.innerHTML = '';
+          liveProgramsList.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = `${p.title} (${p.duration_weeks}w · ${p.mode})`;
+            optgroup.appendChild(opt);
+          });
+        }
+      }
+    } catch {
+      catalogueState.status = 'error';
+      catalogueState.programs = [];
+      liveProgramsList = [];
+      catStatus.innerHTML = `
+        <div class="catalogue-state-card error" role="alert">
+          <div>
+            <strong>Admissions Service Connection Error:</strong> Unable to load live program tracks from server.
+          </div>
+          <button type="button" class="button button-sm button-secondary" id="retry-catalogue-btn">
+            Retry Connection ↻
+          </button>
+        </div>
+      `;
+      const retryBtn = document.getElementById('retry-catalogue-btn');
+      if (retryBtn) {
+        retryBtn.addEventListener('click', () => loadProgramCatalogue());
+      }
+      if (liveContainer) liveContainer.hidden = true;
+    }
+  };
+
+  // 3. Applicant Applications History Loader
+  const loadMyApplications = async (page = 1) => {
+    const dashContainer = document.getElementById('applicant-dashboard-container');
+    if (!dashContainer) return;
+
+    if (!applicantSession.isAuthenticated) {
+      dashContainer.innerHTML = `
+        <div class="dashboard-empty-card">
+          <div class="auth-status-icon" aria-hidden="true">🔒</div>
+          <p>
+            Sign in with an active intern applicant account to view your application status, review progress, and admission decisions.
+          </p>
+          <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <a href="login.html" class="button button-sm button-primary">Sign In →</a>
+            <a href="register.html" class="button button-sm button-secondary">Create Account</a>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    dashContainer.innerHTML = `
+      <div class="dashboard-loading-card" role="status">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <p>Retrieving your application history from the admissions database...</p>
+      </div>
+    `;
+
+    try {
+      const res = await fetch(`${INTERNSHIP_API.myApplications}?page=${page}&limit=10`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+        credentials: 'same-origin'
+      });
+
+      if (res.status === 401) {
+        applicantSession.isAuthenticated = false;
+        dashContainer.innerHTML = `
+          <div class="dashboard-empty-card">
+            <div class="auth-status-icon" aria-hidden="true">🔒</div>
+            <p>Your session has expired or is invalid. Please sign in again to view your applications.</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      const applications = Array.isArray(data.applications) ? data.applications : [];
+
+      if (applications.length === 0) {
+        dashContainer.innerHTML = `
+          <div class="dashboard-empty-card">
+            <div class="auth-status-icon" aria-hidden="true">📄</div>
+            <p>
+              No applications found for your account. Once you apply for an active program above, your application reference, status, and mentor reviews will appear here.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      dashContainer.innerHTML = '';
+
+      const tableWrap = document.createElement('div');
+      tableWrap.className = 'dashboard-table-wrap';
+
+      const table = document.createElement('table');
+      table.className = 'dashboard-table';
+      table.setAttribute('aria-label', 'Submitted Applications Table');
+
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th scope="col">Application Reference</th>
+            <th scope="col">Program Track</th>
+            <th scope="col">Duration &amp; Mode</th>
+            <th scope="col">Status</th>
+            <th scope="col">Submitted Date</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+
+      const tbody = table.querySelector('tbody');
+
+      applications.forEach(app => {
+        const tr = document.createElement('tr');
+
+        const tdId = document.createElement('td');
+        const code = document.createElement('code');
+        code.textContent = app.id || 'N/A';
+        tdId.appendChild(code);
+        tr.appendChild(tdId);
+
+        const tdTitle = document.createElement('td');
+        const strong = document.createElement('strong');
+        strong.textContent = app.program_title || 'Internship Track';
+        tdTitle.appendChild(strong);
+        tr.appendChild(tdTitle);
+
+        const tdMode = document.createElement('td');
+        tdMode.textContent = `${app.duration_weeks ? app.duration_weeks + 'w' : ''} · ${app.program_mode || 'Remote'}`;
+        tr.appendChild(tdMode);
+
+        const tdStatus = document.createElement('td');
+        const badge = document.createElement('span');
+        badge.className = `app-status-badge status-${escapeHtml(app.status || 'submitted')}`;
+        badge.textContent = String(app.status || 'submitted').replace(/_/g, ' ');
+        tdStatus.appendChild(badge);
+        tr.appendChild(tdStatus);
+
+        const tdDate = document.createElement('td');
+        tdDate.textContent = app.submitted_at ? new Date(app.submitted_at).toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        }) : 'Recently';
+        tr.appendChild(tdDate);
+
+        tbody.appendChild(tr);
+      });
+
+      tableWrap.appendChild(table);
+      dashContainer.appendChild(tableWrap);
+
+      const actions = document.createElement('div');
+      actions.className = 'dashboard-actions';
+
+      const refreshBtn = document.createElement('button');
+      refreshBtn.type = 'button';
+      refreshBtn.className = 'button button-sm button-secondary';
+      refreshBtn.textContent = 'Refresh Records ↻';
+      refreshBtn.addEventListener('click', () => loadMyApplications(page));
+      actions.appendChild(refreshBtn);
+
+      const countSpan = document.createElement('span');
+      countSpan.style.fontSize = '12px';
+      countSpan.style.color = 'var(--text-muted)';
+      countSpan.textContent = `Total: ${data.total || applications.length} application(s)`;
+      actions.appendChild(countSpan);
+
+      dashContainer.appendChild(actions);
+    } catch (err) {
+      dashContainer.innerHTML = `
+        <div class="dashboard-error-card" role="alert">
+          <p>Unable to retrieve application records from the server (${escapeHtml(err.message || 'Network error')}).</p>
+          <button type="button" class="button button-sm button-secondary" id="retry-dashboard-btn" style="margin-top: 10px;">
+            Retry Connection ↻
+          </button>
+        </div>
+      `;
+      const retryBtn = document.getElementById('retry-dashboard-btn');
+      if (retryBtn) {
+        retryBtn.addEventListener('click', () => loadMyApplications(page));
+      }
+    }
+  };
+
+  // Kickoff dynamic catalogue and auth session checks if elements exist
+  if (internshipForm || document.getElementById('programs-catalogue-status')) {
+    checkApplicantSession();
+    loadProgramCatalogue();
+  }
+
+  // 4. Form Submission & Validation Pipeline
+  if (internshipForm && internshipStatus && internshipSubmitBtn) {
+    const wireCopyInternshipButton = (text) => {
+      const copyBtn = document.getElementById('copy-internship-summary-btn');
+      if (!copyBtn) return;
+      copyBtn.addEventListener('click', async () => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          const prevHtml = copyBtn.innerHTML;
+          copyBtn.textContent = 'Copied to Clipboard! ✓';
+          copyBtn.style.backgroundColor = '#ecfdf5';
+          copyBtn.style.borderColor = '#10b981';
+          copyBtn.style.color = '#065f46';
+          setTimeout(() => {
+            copyBtn.innerHTML = prevHtml;
+            copyBtn.removeAttribute('style');
+          }, 2500);
+        } catch {
+          copyBtn.textContent = 'Failed to copy';
+        }
+      });
+    };
+
+    // Dynamic Statement-of-Purpose character counter
+    const motivationTextarea = document.getElementById('internship-motivation');
+    const motivationCharHint = document.getElementById('motivation-char-hint');
+    if (motivationTextarea && motivationCharHint) {
+      const updateMotivationCounter = () => {
+        const len = motivationTextarea.value.trim().length;
+        motivationCharHint.textContent = `${len.toLocaleString()} / 3,000 characters (minimum 20)`;
+        if (len > 3000) {
+          motivationCharHint.classList.add('char-count-exceeded');
+        } else {
+          motivationCharHint.classList.remove('char-count-exceeded');
+        }
+      };
+      motivationTextarea.addEventListener('input', updateMotivationCounter);
+      updateMotivationCounter();
+    }
+
+    internshipForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Honeypot spam protection
+      const honeypot = document.getElementById('applicant_source_verification');
+      if (honeypot && honeypot.value.trim() !== '') {
+        internshipStatus.className = 'form-status active notice';
+        internshipStatus.innerHTML = `<span>Application received. Thank you.</span>`;
+        internshipForm.reset();
+        return;
+      }
+
+      // Input elements
+      const fullNameInput = document.getElementById('internship-full-name');
+      const emailInput = document.getElementById('internship-email');
+      const roleInput = document.getElementById('internship-role');
+      const educationInput = document.getElementById('internship-education');
+      const institutionInput = document.getElementById('internship-institution');
+      const skillsInput = document.getElementById('internship-skills');
+      const motivationInput = document.getElementById('internship-motivation');
+      const consentInput = document.getElementById('internship-consent');
+      const phoneInput = document.getElementById('internship-phone');
+      const linkedinInput = document.getElementById('internship-linkedin');
+      const portfolioInput = document.getElementById('internship-portfolio');
+      const resumeUrlInput = document.getElementById('internship-resume-url');
+
+      const inputsToValidate = [
+        fullNameInput, emailInput, roleInput, educationInput,
+        institutionInput, skillsInput, motivationInput, consentInput,
+        linkedinInput, portfolioInput, resumeUrlInput
+      ];
+      inputsToValidate.forEach(f => f && clearFieldError(f));
+
+      let isValid = true;
+      let firstInvalid = null;
+
+      // Full name
+      if (!fullNameInput || !fullNameInput.value.trim() || fullNameInput.value.trim().length < 2) {
+        setFieldError(fullNameInput, 'Please provide your full legal name.');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = fullNameInput;
+      }
+
+      // Email
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+      if (!emailInput || !emailInput.value.trim()) {
+        setFieldError(emailInput, 'Please provide your email address.');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = emailInput;
+      } else if (!emailRegex.test(emailInput.value.trim())) {
+        setFieldError(emailInput, 'Please enter a valid email format (e.g. name@university.edu).');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = emailInput;
+      }
+
+      // Role
+      if (!roleInput || !roleInput.value.trim()) {
+        setFieldError(roleInput, 'Please select an internship role category.');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = roleInput;
+      }
+
+      // Education
+      if (!educationInput || !educationInput.value.trim()) {
+        setFieldError(educationInput, 'Please select your current education level.');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = educationInput;
+      }
+
+      // Institution
+      if (!institutionInput || !institutionInput.value.trim()) {
+        setFieldError(institutionInput, 'Please provide your college, university, or educational background.');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = institutionInput;
+      }
+
+      // Skills
+      if (!skillsInput || !skillsInput.value.trim()) {
+        setFieldError(skillsInput, 'Please list your key programming languages, tools, or design skills.');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = skillsInput;
+      }
+
+      // Statement of Purpose / Motivation Statement (20 to 3,000 characters)
+      const motivationTrimmed = motivationInput ? motivationInput.value.trim() : '';
+      if (!motivationInput || !motivationTrimmed) {
+        setFieldError(motivationInput, 'Please share your statement of purpose (between 20 and 3,000 characters).');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = motivationInput;
+      } else if (motivationTrimmed.length < 20) {
+        setFieldError(motivationInput, `Statement of purpose must be at least 20 characters (currently ${motivationTrimmed.length} characters).`);
+        isValid = false;
+        if (!firstInvalid) firstInvalid = motivationInput;
+      } else if (motivationTrimmed.length > 3000) {
+        setFieldError(motivationInput, `Statement of purpose cannot exceed 3,000 characters (currently ${motivationTrimmed.length} characters).`);
+        isValid = false;
+        if (!firstInvalid) firstInvalid = motivationInput;
+      }
+
+      // Privacy Consent
+      if (!consentInput || !consentInput.checked) {
+        setFieldError(consentInput, 'You must consent to the privacy notice to submit an application.');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = consentInput;
+      }
+
+      // Optional URLs
+      const urlRegex = /^https?:\/\/[^\s/$.?#].[^\s]*$/i;
+      [
+        { input: linkedinInput, label: 'LinkedIn profile' },
+        { input: portfolioInput, label: 'GitHub / portfolio URL' },
+        { input: resumeUrlInput, label: 'Resume document URL' }
+      ].forEach(({ input, label }) => {
+        if (input && input.value.trim() && !urlRegex.test(input.value.trim())) {
+          setFieldError(input, `Please enter a valid web URL starting with http:// or https:// for your ${label}.`);
+          isValid = false;
+          if (!firstInvalid) firstInvalid = input;
+        }
+      });
+
+      if (!isValid) {
+        internshipStatus.className = 'form-status active warning';
+        internshipStatus.innerHTML = `<span>Please resolve the highlighted fields above before submitting.</span>`;
+        if (firstInvalid) {
+          firstInvalid.focus();
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      const fullName = fullNameInput.value.trim();
+      const email = emailInput.value.trim();
+      const role = roleInput.value.trim();
+      const education = educationInput.value.trim();
+      const institution = institutionInput.value.trim();
+      const skills = skillsInput.value.trim();
+      const motivation = motivationInput.value.trim();
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+      const linkedin = linkedinInput ? linkedinInput.value.trim() : '';
+      const portfolio = portfolioInput ? portfolioInput.value.trim() : '';
+      const resumeUrl = resumeUrlInput ? resumeUrlInput.value.trim() : '';
+
+      const applicationSummary = [
+        '========================================',
+        'NEXORA NEXUS — INTERNSHIP APPLICATION',
+        '========================================',
+        `Applicant Name:    ${fullName}`,
+        `Email:             ${email}`,
+        `Role:              ${role}`,
+        `Education Level:   ${education}`,
+        `Institution:       ${institution}`,
+        `Relevant Skills:   ${skills}`,
+        phone ? `Phone:             ${phone}` : null,
+        linkedin ? `LinkedIn:          ${linkedin}` : null,
+        portfolio ? `Portfolio / GitHub: ${portfolio}` : null,
+        resumeUrl ? `Resume URL:        ${resumeUrl}` : null,
+        '',
+        '--- Motivation Statement ---',
+        motivation,
+        '',
+        '--- Compliance & Consent ---',
+        'Applicant consented to Privacy Policy and data processing.',
+        `Submitted At (Local): ${new Date().toLocaleString()}`,
+        '========================================'
+      ].filter(line => line !== null).join('\n');
+
+      // Check Session Before Transmission
+      if (!applicantSession.isAuthenticated) {
+        internshipStatus.className = 'form-status active warning';
+        internshipStatus.innerHTML = `
+          <strong>Authentication Required:</strong><br>
+          You must be signed in with an active intern applicant account to submit an application to the admissions API.<br>
+          <div style="margin-top: 10px; margin-bottom: 12px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="login.html" class="button button-sm button-primary">Sign In to Account →</a>
+            <a href="register.html" class="button button-sm button-secondary">Create Account</a>
+          </div>
+          Your formatted application details have been preserved below for safekeeping:
+          <div class="form-status-actions">
+            <button type="button" class="button button-primary button-sm" id="copy-internship-summary-btn">Copy Formatted Application 📋</button>
+          </div>
+          <div class="form-inquiry-preview" title="Assembled Application Preview">${escapeHtml(applicationSummary)}</div>
+        `;
+        wireCopyInternshipButton(applicationSummary);
+        return;
+      }
+
+      if (applicantSession.user && applicantSession.user.status === 'pending_verification') {
+        internshipStatus.className = 'form-status active warning';
+        internshipStatus.innerHTML = `
+          <strong>Email Verification Required:</strong><br>
+          Your account (<code>${escapeHtml(applicantSession.user.email)}</code>) is pending email verification.<br>
+          Only verified intern accounts may submit applications. <em>(Note: Transactional email verification delivery is awaiting provider configuration)</em>.<br>
+          Your formatted application details have been preserved below:
+          <div class="form-status-actions">
+            <button type="button" class="button button-primary button-sm" id="copy-internship-summary-btn">Copy Formatted Application 📋</button>
+          </div>
+          <div class="form-inquiry-preview" title="Assembled Application Preview">${escapeHtml(applicationSummary)}</div>
+        `;
+        wireCopyInternshipButton(applicationSummary);
+        return;
+      }
+
+      // Fix 2: Catalogue State Guards
+      if (catalogueState.status === 'loading') {
+        internshipStatus.className = 'form-status active warning';
+        internshipStatus.innerHTML = `
+          <strong>Programme Catalogue Loading:</strong><br>
+          Accredited programmes are currently loading from the admissions server. Please wait until loading finishes before submitting.
+        `;
+        return;
+      }
+
+      if (catalogueState.status === 'empty') {
+        internshipStatus.className = 'form-status active warning';
+        internshipStatus.innerHTML = `
+          <strong>No Active Openings Available:</strong><br>
+          There are currently no active programmes open for admission in the database. The cards below reflect exploratory discipline interests only. Application submission is closed until programmes are opened by admissions.<br>
+          Your formatted application details have been preserved below for safekeeping:
+          <div class="form-status-actions">
+            <button type="button" class="button button-primary button-sm" id="copy-internship-summary-btn">Copy Formatted Application 📋</button>
+          </div>
+          <div class="form-inquiry-preview" title="Assembled Application Preview">${escapeHtml(applicationSummary)}</div>
+        `;
+        wireCopyInternshipButton(applicationSummary);
+        return;
+      }
+
+      if (catalogueState.status === 'error') {
+        internshipStatus.className = 'form-status active error';
+        internshipStatus.innerHTML = `
+          <strong>Admissions Catalogue Unavailable:</strong><br>
+          Unable to verify active programmes with the server. Application submission is disabled until connection is restored.<br>
+          Your formatted application details have been preserved below for safekeeping:
+          <div class="form-status-actions">
+            <button type="button" class="button button-primary button-sm" id="copy-internship-summary-btn">Copy Formatted Application 📋</button>
+          </div>
+          <div class="form-inquiry-preview" title="Assembled Application Preview">${escapeHtml(applicationSummary)}</div>
+        `;
+        wireCopyInternshipButton(applicationSummary);
+        return;
+      }
+
+      if (catalogueState.status !== 'loaded' || !Array.isArray(catalogueState.programs) || catalogueState.programs.length === 0) {
+        internshipStatus.className = 'form-status active warning';
+        internshipStatus.innerHTML = `
+          <strong>Admissions Catalogue Unavailable:</strong><br>
+          Applications can only be submitted when active programmes are loaded from the admissions database.
+        `;
+        return;
+      }
+
+      // Fix 2: Selected program must strictly match an active server-returned programme
+      const selectedProgram = catalogueState.programs.find(p => p.id === role);
+      if (!selectedProgram) {
+        internshipStatus.className = 'form-status active warning';
+        internshipStatus.innerHTML = `
+          <strong>Active Programme Selection Required:</strong><br>
+          The selected option ("${escapeHtml(role)}") represents an exploratory discipline interest, not a confirmed opening.<br>
+          Please select an active programme from the "Active Programs Open for Admission" section in the dropdown before submitting.
+        `;
+        return;
+      }
+
+      const targetProgramId = selectedProgram.id;
+
+      // Submit to real POST /api/applications endpoint
+      if (isSubmittingApplication) return;
+      isSubmittingApplication = true;
+      const originalBtnHtml = internshipSubmitBtn.innerHTML;
+      internshipSubmitBtn.disabled = true;
+      internshipSubmitBtn.innerHTML = `<span>Transmitting Application...</span>`;
+
+      internshipStatus.className = 'form-status active info';
+      internshipStatus.innerHTML = `<span>Submitting your application to the admissions server over secure HTTPS...</span>`;
+
+      try {
+        const response = await fetch(INTERNSHIP_API.applications, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            program_id: targetProgramId,
+            statement_of_purpose: motivation
+          })
+        });
+
+        if (response.status === 201) {
+          const data = await response.json();
+          internshipStatus.className = 'form-status active success';
+          internshipStatus.innerHTML = `
+            <strong>✓ Application Submitted Successfully!</strong><br>
+            Application Reference ID: <code>${escapeHtml(data.application?.id || 'Confirmed')}</code><br>
+            Program Track: <strong>${escapeHtml(data.application?.program_title || (selectedProgram ? selectedProgram.title : role))}</strong><br>
+            Status: <span class="app-status-badge status-submitted">${escapeHtml(data.application?.status || 'submitted')}</span><br>
+            Your application has been securely recorded in the admissions database. You can track review stages in your dashboard below.
+          `;
+          internshipForm.reset();
+          if (internshipRoleBadgeContainer) internshipRoleBadgeContainer.innerHTML = '';
+          loadMyApplications();
+        } else if (response.status === 409) {
+          const errData = await response.json().catch(() => ({}));
+          internshipStatus.className = 'form-status active warning';
+          internshipStatus.innerHTML = `
+            <strong>Duplicate Application Notice:</strong><br>
+            ${escapeHtml(errData?.error?.message || 'You have already submitted an application for this internship program.')}<br>
+            You can track your existing application in the tracking section below.
+          `;
+        } else if (response.status === 401) {
+          internshipStatus.className = 'form-status active error';
+          internshipStatus.innerHTML = `
+            <strong>Session Expired or Unauthorized:</strong><br>
+            Your applicant session is invalid or has expired. Please sign in to submit your application.
+          `;
+        } else if (response.status === 403) {
+          const errData = await response.json().catch(() => ({}));
+          internshipStatus.className = 'form-status active warning';
+          internshipStatus.innerHTML = `
+            <strong>Submission Restricted:</strong><br>
+            ${escapeHtml(errData?.error?.message || 'Only verified intern accounts may submit applications.')}
+          `;
+        } else if (response.status === 400) {
+          const errData = await response.json().catch(() => ({}));
+          internshipStatus.className = 'form-status active warning';
+          internshipStatus.innerHTML = `
+            <strong>Application Validation Error:</strong><br>
+            ${escapeHtml(errData?.error?.message || 'Please check your inputs and try again.')}
+          `;
+        } else if (response.status === 404) {
+          internshipStatus.className = 'form-status active warning';
+          internshipStatus.innerHTML = `
+            <strong>Program Not Found or Inactive:</strong><br>
+            The selected program is not open for admission in the database. Please select an active program.
+          `;
+        } else if (response.status === 429) {
+          internshipStatus.className = 'form-status active warning';
+          internshipStatus.innerHTML = `
+            <strong>Submission Rate Limit Reached:</strong><br>
+            Too many application submissions detected. Please wait 15 minutes before submitting again.
+          `;
+        } else {
+          throw new Error(`Endpoint returned HTTP ${response.status}`);
+        }
+      } catch (fetchErr) {
+        internshipStatus.className = 'form-status active error';
+        internshipStatus.innerHTML = `
+          <strong>Submission Service Unavailable (${escapeHtml(fetchErr.message || 'Network error')}).</strong><br>
+          Automated server delivery could not be completed. Your application details have been preserved below so nothing is lost.<br>
+          Please copy your formatted application details below for safekeeping:
+          <div class="form-status-actions">
+            <button type="button" class="button button-primary button-sm" id="copy-internship-summary-btn">Copy Formatted Application 📋</button>
+          </div>
+          <div class="form-inquiry-preview" title="Assembled Application Preview">${escapeHtml(applicationSummary)}</div>
+        `;
+        wireCopyInternshipButton(applicationSummary);
+      } finally {
+        isSubmittingApplication = false;
+        internshipSubmitBtn.disabled = false;
+        internshipSubmitBtn.innerHTML = originalBtnHtml;
       }
     });
   }
@@ -1458,6 +2441,405 @@ Inquiry submitted via Nexora Nexus Web Portal (${new Date().toLocaleDateString()
       });
     }
   };
+
+  /* --------------------------------------------------------------------------
+     8. Applicant Authentication: Login Page Handler
+     -------------------------------------------------------------------------- */
+  const loginForm = document.getElementById('applicant-login-form');
+  if (loginForm) {
+    const loginEmailInput = document.getElementById('login-email');
+    const loginPasswordInput = document.getElementById('login-password');
+    const loginStatus = document.getElementById('login-status');
+    const loginSubmitBtn = document.getElementById('login-submit-btn');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!loginEmailInput || !loginPasswordInput || !loginStatus || !loginSubmitBtn) return;
+
+      const email = loginEmailInput.value.trim();
+      const password = loginPasswordInput.value;
+
+      // Reset errors
+      clearFieldError(loginEmailInput);
+      clearFieldError(loginPasswordInput);
+      loginStatus.className = 'auth-status-container';
+      loginStatus.innerHTML = '';
+
+      let hasError = false;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+      if (!email) {
+        setFieldError(loginEmailInput, 'Please enter your email address.');
+        hasError = true;
+      } else if (!emailRegex.test(email)) {
+        setFieldError(loginEmailInput, 'Please enter a valid email address.');
+        hasError = true;
+      }
+
+      if (!password) {
+        setFieldError(loginPasswordInput, 'Please enter your password.');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const origBtnHtml = loginSubmitBtn.innerHTML;
+      loginSubmitBtn.disabled = true;
+      loginSubmitBtn.innerHTML = '<span>Signing In...</span>';
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.status === 200) {
+          loginStatus.className = 'auth-status-container active success';
+          loginStatus.innerHTML = `
+            <strong>✓ Sign In Successful!</strong><br>
+            Welcome back. Redirecting to your applicant dashboard...
+          `;
+          setTimeout(() => {
+            window.location.href = 'internships.html#applicant-dashboard';
+          }, 1000);
+        } else if (response.status === 401) {
+          loginStatus.className = 'auth-status-container active error';
+          loginStatus.innerHTML = `
+            <strong>Invalid Credentials:</strong><br>
+            ${escapeHtml(data?.error?.message || 'The email or password you entered is incorrect. Please check and try again.')}
+          `;
+        } else if (response.status === 403) {
+          loginStatus.className = 'auth-status-container active warning';
+          loginStatus.innerHTML = `
+            <strong>Account Verification Pending:</strong><br>
+            ${escapeHtml(data?.error?.message || 'Your account is pending email verification.')}<br>
+            <p style="margin-top: 8px;"><a href="verify-email.html" style="color: inherit; text-decoration: underline; font-weight: 600;">Go to Email Verification or Request New Link →</a></p>
+          `;
+        } else if (response.status === 429) {
+          loginStatus.className = 'auth-status-container active warning';
+          loginStatus.innerHTML = `
+            <strong>Too Many Attempts:</strong><br>
+            ${escapeHtml(data?.error?.message || 'Too many failed login attempts. Please wait 15 minutes before trying again.')}
+          `;
+        } else {
+          loginStatus.className = 'auth-status-container active error';
+          loginStatus.innerHTML = `
+            <strong>Sign In Error:</strong><br>
+            ${escapeHtml(data?.error?.message || 'An unexpected error occurred. Please try again.')}
+          `;
+        }
+      } catch (err) {
+        loginStatus.className = 'auth-status-container active error';
+        loginStatus.innerHTML = `
+          <strong>Connection Error:</strong><br>
+          Unable to reach the authentication service (${escapeHtml(err.message || 'Network failure')}). Please verify your connection.
+        `;
+      } finally {
+        loginSubmitBtn.disabled = false;
+        loginSubmitBtn.innerHTML = origBtnHtml;
+      }
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     9. Applicant Authentication: Registration Page Handler
+     -------------------------------------------------------------------------- */
+  const registerForm = document.getElementById('applicant-register-form');
+  if (registerForm) {
+    const regNameInput = document.getElementById('reg-name');
+    const regEmailInput = document.getElementById('reg-email');
+    const regPasswordInput = document.getElementById('reg-password');
+    const regConfirmInput = document.getElementById('reg-password-confirm');
+    const regCollegeInput = document.getElementById('reg-college');
+    const regGradYearInput = document.getElementById('reg-grad-year');
+    const regStatus = document.getElementById('register-status');
+    const regSubmitBtn = document.getElementById('register-submit-btn');
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!regNameInput || !regEmailInput || !regPasswordInput || !regConfirmInput || !regStatus || !regSubmitBtn) return;
+
+      const full_name = regNameInput.value.trim();
+      const email = regEmailInput.value.trim();
+      const password = regPasswordInput.value;
+      const confirmPassword = regConfirmInput.value;
+      const college = regCollegeInput ? regCollegeInput.value.trim() : '';
+      const graduation_year = regGradYearInput && regGradYearInput.value ? parseInt(regGradYearInput.value, 10) : undefined;
+
+      // Reset errors
+      [regNameInput, regEmailInput, regPasswordInput, regConfirmInput].forEach(f => f && clearFieldError(f));
+      regStatus.className = 'auth-status-container';
+      regStatus.innerHTML = '';
+
+      let hasError = false;
+      if (!full_name || full_name.length < 2) {
+        setFieldError(regNameInput, 'Full legal name must be at least 2 characters.');
+        hasError = true;
+      }
+
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+      if (!email) {
+        setFieldError(regEmailInput, 'Please provide your email address.');
+        hasError = true;
+      } else if (!emailRegex.test(email)) {
+        setFieldError(regEmailInput, 'Please enter a valid email address.');
+        hasError = true;
+      }
+
+      if (!password || password.length < 8) {
+        setFieldError(regPasswordInput, 'Password must be at least 8 characters.');
+        hasError = true;
+      } else if (password.length > 128) {
+        setFieldError(regPasswordInput, 'Password cannot exceed 128 characters.');
+        hasError = true;
+      } else if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+        setFieldError(regPasswordInput, 'Password must contain uppercase, lowercase, and numeric characters.');
+        hasError = true;
+      }
+
+      if (password !== confirmPassword) {
+        setFieldError(regConfirmInput, 'Passwords do not match.');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const origBtnHtml = regSubmitBtn.innerHTML;
+      regSubmitBtn.disabled = true;
+      regSubmitBtn.innerHTML = '<span>Creating Account...</span>';
+
+      try {
+        const payload = {
+          full_name,
+          email,
+          password
+        };
+        if (college) payload.college = college;
+        if (graduation_year) payload.graduation_year = graduation_year;
+
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.status === 201) {
+          regStatus.className = 'auth-status-container active success';
+          const emailSentNotice = data?.email_sent
+            ? 'A verification link has been sent to your email address. Please click the link to activate your account.'
+            : 'Your account is in <code>pending_verification</code> status. If email service is awaiting provider configuration, you can verify your account or request a verification link on the verification page.';
+          regStatus.innerHTML = `
+            <strong>✓ Account Created Successfully!</strong><br>
+            Your account (<code>${escapeHtml(email)}</code>) has been registered in <code>pending_verification</code> status.<br><br>
+            ${escapeHtml(emailSentNotice)}<br><br>
+            <a href="verify-email.html" class="button button-sm button-primary" style="margin-top: 8px;">Go to Email Verification →</a>
+            <a href="login.html" class="button button-sm button-outline" style="margin-top: 8px; margin-left: 8px;">Proceed to Sign In</a>
+          `;
+          registerForm.reset();
+        } else if (response.status === 409) {
+          regStatus.className = 'auth-status-container active warning';
+          regStatus.innerHTML = `
+            <strong>Email Already Registered:</strong><br>
+            ${escapeHtml(data?.error?.message || 'An account with this email address already exists.')}<br>
+            <a href="login.html" style="color: inherit; text-decoration: underline; font-weight: 600;">Sign in to your existing account →</a>
+          `;
+        } else if (response.status === 400) {
+          regStatus.className = 'auth-status-container active error';
+          regStatus.innerHTML = `
+            <strong>Registration Validation Error:</strong><br>
+            ${escapeHtml(data?.error?.message || 'Please review the highlighted fields.')}
+          `;
+        } else if (response.status === 429) {
+          regStatus.className = 'auth-status-container active warning';
+          regStatus.innerHTML = `
+            <strong>Too Many Requests:</strong><br>
+            Too many registration attempts. Please wait a few minutes before trying again.
+          `;
+        } else {
+          regStatus.className = 'auth-status-container active error';
+          regStatus.innerHTML = `
+            <strong>Registration Service Unavailable:</strong><br>
+            ${escapeHtml(data?.error?.message || 'Unable to register account at this time.')}
+          `;
+        }
+      } catch (err) {
+        regStatus.className = 'auth-status-container active error';
+        regStatus.innerHTML = `
+          <strong>Connection Error:</strong><br>
+          Unable to reach registration service (${escapeHtml(err.message || 'Network failure')}).
+        `;
+      } finally {
+        regSubmitBtn.disabled = false;
+        regSubmitBtn.innerHTML = origBtnHtml;
+      }
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     10. Applicant Authentication: Email Verification Page Handler
+     -------------------------------------------------------------------------- */
+  const verifyStatus = document.getElementById('verify-status');
+  if (verifyStatus) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const rawToken = urlParams.get('token');
+
+    if (!rawToken || !rawToken.trim()) {
+      verifyStatus.className = 'auth-status-container active warning';
+      verifyStatus.innerHTML = `
+        <strong>No Verification Token Provided:</strong><br>
+        If you received a verification link via email, please click the link directly from your inbox.<br>
+        Alternatively, enter your email below to request a new verification link.
+      `;
+    } else {
+      const cleanToken = rawToken.trim();
+      verifyStatus.className = 'auth-status-container active';
+      verifyStatus.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="spinner" aria-hidden="true" style="width: 18px; height: 18px; border: 2px solid #cbd5e1; border-top-color: #2563eb; border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite;"></span>
+          <span>Validating verification token...</span>
+        </div>
+      `;
+
+      (async () => {
+        try {
+          const response = await fetch('/api/auth/verify-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ token: cleanToken })
+          });
+
+          const data = await response.json().catch(() => ({}));
+
+          if (response.status === 200) {
+            verifyStatus.className = 'auth-status-container active success';
+            verifyStatus.innerHTML = `
+              <strong>✓ Email Verified Successfully!</strong><br>
+              ${escapeHtml(data?.message || 'Your account is now active.')}<br><br>
+              <a href="login.html" class="button button-sm button-primary" style="margin-top: 8px;">Sign In to Admissions Portal →</a>
+            `;
+          } else if (response.status === 400) {
+            verifyStatus.className = 'auth-status-container active error';
+            verifyStatus.innerHTML = `
+              <strong>Verification Failed:</strong><br>
+              ${escapeHtml(data?.error?.message || 'The verification link is invalid, already used, or expired.')}<br>
+              Please enter your email below to request a new verification link.
+            `;
+          } else if (response.status === 429) {
+            verifyStatus.className = 'auth-status-container active warning';
+            verifyStatus.innerHTML = `
+              <strong>Too Many Requests:</strong><br>
+              Too many verification requests. Please wait a few minutes before trying again.
+            `;
+          } else {
+            verifyStatus.className = 'auth-status-container active error';
+            verifyStatus.innerHTML = `
+              <strong>Verification Service Unavailable:</strong><br>
+              ${escapeHtml(data?.error?.message || 'Unable to verify email at this time. Please try again shortly.')}
+            `;
+          }
+        } catch (err) {
+          verifyStatus.className = 'auth-status-container active error';
+          verifyStatus.innerHTML = `
+            <strong>Connection Error:</strong><br>
+            Unable to reach verification service (${escapeHtml(err.message || 'Network failure')}).
+          `;
+        }
+      })();
+    }
+
+    // Resend verification form handler
+    const resendForm = document.getElementById('resend-verification-form');
+    if (resendForm) {
+      const resendEmailInput = document.getElementById('resend-email');
+      const resendSubmitBtn = document.getElementById('resend-submit-btn');
+      const resendStatus = document.getElementById('resend-status');
+
+      resendForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!resendEmailInput || !resendSubmitBtn || !resendStatus) return;
+
+        const email = resendEmailInput.value.trim();
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+
+        resendStatus.className = 'auth-status-container';
+        resendStatus.innerHTML = '';
+
+        if (!email || !emailRegex.test(email)) {
+          resendStatus.className = 'auth-status-container active error';
+          resendStatus.innerHTML = '<strong>Invalid Email:</strong> Please enter a valid email address.';
+          return;
+        }
+
+        const origBtnText = resendSubmitBtn.innerHTML;
+        resendSubmitBtn.disabled = true;
+        resendSubmitBtn.innerHTML = '<span>Sending Request...</span>';
+
+        try {
+          const response = await fetch('/api/auth/resend-verification', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ email })
+          });
+
+          const data = await response.json().catch(() => ({}));
+
+          if (response.status === 200) {
+            resendStatus.className = 'auth-status-container active success';
+            resendStatus.innerHTML = `
+              <strong>Request Received:</strong><br>
+              ${escapeHtml(data?.message || 'If an unverified account exists with that email address, verification instructions have been issued.')}
+            `;
+            resendForm.reset();
+          } else if (response.status === 429) {
+            resendStatus.className = 'auth-status-container active warning';
+            resendStatus.innerHTML = `
+              <strong>Too Many Requests:</strong><br>
+              ${escapeHtml(data?.error?.message || 'Too many verification requests. Please try again in 15 minutes.')}
+            `;
+          } else {
+            resendStatus.className = 'auth-status-container active error';
+            resendStatus.innerHTML = `
+              <strong>Unable to Process Request:</strong><br>
+              ${escapeHtml(data?.error?.message || 'Please try again later.')}
+            `;
+          }
+        } catch (err) {
+          resendStatus.className = 'auth-status-container active error';
+          resendStatus.innerHTML = `
+            <strong>Connection Error:</strong><br>
+            Unable to reach server (${escapeHtml(err.message || 'Network failure')}).
+          `;
+        } finally {
+          resendSubmitBtn.disabled = false;
+          resendSubmitBtn.innerHTML = origBtnText;
+        }
+      });
+    }
+  }
 
   // Initialize all experiences & Phase 8 integrations
   initGlassOrbs();
